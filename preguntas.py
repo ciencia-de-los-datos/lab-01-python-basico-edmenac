@@ -9,6 +9,7 @@ básicas.
 
 Utilice el archivo `data.csv` para resolver las preguntas.
 
+
 """
 
 import csv
@@ -168,7 +169,8 @@ def pregunta_05():
     ]
     max_min_lista_ordenada = sorted(max_min_lista, key=lambda x: x[0])
 
-    return max_min_lista
+
+    return max_min_lista_ordenada
 
 
 def pregunta_06():
@@ -196,34 +198,26 @@ def pregunta_06():
 
     min_max_por_clave = defaultdict(lambda: (float("inf"), float("-inf")))
 
-    # Abrir el archivo CSV en modo lectura
     with open(nombre_archivo, newline="") as archivo_csv:
-        # Crear un lector CSV
         lector_csv = csv.reader(archivo_csv, delimiter="\t")
 
-        # Iterar sobre cada fila del archivo CSV
         for fila in lector_csv:
             if fila:
-                # Obtener el diccionario codificado en la columna 5
                 diccionario_codificado = fila[4]
-                # Decodificar el diccionario
                 elementos = diccionario_codificado.split(",")
                 for elemento in elementos:
                     clave, valor_str = elemento.split(":")
                     valor = int(valor_str)
-                    # Actualizar el valor más pequeño y el valor más grande para la clave correspondiente
                     min_max_por_clave[clave] = (
                         min(min_max_por_clave[clave][0], valor),
                         max(min_max_por_clave[clave][1], valor),
                     )
 
-    # Convertir el diccionario a una lista de tuplas
     min_max_lista = [
         (clave, min_valor, max_valor)
         for clave, (min_valor, max_valor) in min_max_por_clave.items()
     ]
 
-    # Ordenar la lista de tuplas alfabéticamente por clave
     min_max_lista_ordenada = sorted(min_max_lista)
 
     return min_max_lista_ordenada
@@ -250,7 +244,24 @@ def pregunta_07():
     ]
 
     """
-    return
+    letras_por_valor_columna2 = defaultdict(list)
+
+    with open(nombre_archivo, newline="") as archivo_csv:
+        lector_csv = csv.reader(archivo_csv, delimiter="\t")
+
+        for fila in lector_csv:
+            if fila:
+                valor_columna2 = int(fila[1])
+                letra_columna1 = fila[0]
+                letras_por_valor_columna2[valor_columna2].append(letra_columna1)
+
+    lista_tuplas = [
+        (valor, letras) for valor, letras in letras_por_valor_columna2.items()
+    ]
+
+    lista_tuplas_ordenada = sorted(lista_tuplas)
+    
+    return lista_tuplas_ordenada
 
 
 def pregunta_08():
@@ -275,7 +286,23 @@ def pregunta_08():
     ]
 
     """
-    return
+    letras_por_valor_columna2 = defaultdict(set)
+
+    with open(nombre_archivo, newline="") as archivo_csv:
+        lector_csv = csv.reader(archivo_csv, delimiter="\t")
+
+        for fila in lector_csv:
+            if fila:
+                valor_columna2 = int(fila[1])
+                letra_columna1 = fila[0]
+                letras_por_valor_columna2[valor_columna2].add(letra_columna1)
+
+    lista_tuplas = [
+        (valor, sorted(letras)) for valor, letras in letras_por_valor_columna2.items()
+    ]
+    lista_tuplas_ordenada = sorted(lista_tuplas)
+    
+    return lista_tuplas_ordenada
 
 
 def pregunta_09():
@@ -298,7 +325,22 @@ def pregunta_09():
     }
 
     """
-    return
+    frecuencia_claves_columna5 = defaultdict(int)
+
+    with open(nombre_archivo, newline="") as archivo_csv:
+        lector_csv = csv.reader(archivo_csv, delimiter="\t")
+
+        for fila in lector_csv:
+            if fila:
+                diccionario_codificado = fila[4]
+                elementos = diccionario_codificado.split(",")
+                for elemento in elementos:
+                    clave, _ = elemento.split(":")
+                    frecuencia_claves_columna5[clave] += 1
+
+    registros_ordenados = dict(sorted(frecuencia_claves_columna5.items()))
+
+    return registros_ordenados
 
 
 def pregunta_10():
@@ -319,7 +361,18 @@ def pregunta_10():
 
 
     """
-    return
+    resultado = []
+
+    with open("data.csv", newline="") as csvfile:
+        reader = csv.reader(csvfile, delimiter='\t')
+
+        for row in reader:
+            letra = row[0]
+            elementos_columna_4 = len(row[3].split(","))  
+            elementos_columna_5 = len(row[4].split(","))  
+            resultado.append((letra, elementos_columna_4, elementos_columna_5))
+    
+    return resultado
 
 
 def pregunta_11():
@@ -340,7 +393,20 @@ def pregunta_11():
 
 
     """
-    return
+    suma_por_letra = {}
+
+    with open("data.csv", newline="") as csvfile:
+        reader = csv.reader(csvfile, delimiter='\t')
+
+        for row in reader:
+            letras = row[3].split(",")  
+            for letra in letras:
+                letra = letra.strip()  
+                suma_por_letra[letra] = suma_por_letra.get(letra, 0) + int(row[1])  
+
+    suma_por_letra_ordenada = dict(sorted(suma_por_letra.items()))
+    
+    return suma_por_letra_ordenada
 
 
 def pregunta_12():
@@ -358,15 +424,29 @@ def pregunta_12():
     }
 
     """
-    return
+    suma_por_columna_1 = {}
+
+    with open("data.csv", newline="") as csvfile:
+        reader = csv.reader(csvfile, delimiter='\t')
+
+        for row in reader:
+            columna_1 = row[0]
+            valores_columna_5 = row[4].split(",") 
+            for par in valores_columna_5:
+                clave, valor = par.split(":") 
+                suma_por_columna_1[columna_1] = suma_por_columna_1.get(columna_1, 0) + int(valor)  
+    
+    suma_por_columna_ordenada = dict(sorted(suma_por_columna_1.items()))
+    
+    return suma_por_columna_ordenada
 
 
-def main():
-    print(pregunta_01())
-    print(pregunta_02())
-    print(pregunta_03())
-    print(pregunta_04())
-    print(pregunta_05())
+# def main():
+    # print(pregunta_01())
+    # print(pregunta_02())
+    # print(pregunta_03())
+    # print(pregunta_04())
+    # print(pregunta_05())
     # print(pregunta_06())
     # print(pregunta_07())
     # print(pregunta_08())
@@ -374,6 +454,20 @@ def main():
     # print(pregunta_10())
     # print(pregunta_11())
     # print(pregunta_12())
+
+def main():
+    pregunta_01()
+    pregunta_02()
+    pregunta_03()
+    pregunta_04()
+    pregunta_05()
+    pregunta_06()
+    pregunta_07()
+    pregunta_08()
+    pregunta_09()
+    pregunta_10()
+    pregunta_11()
+    pregunta_12()
 
 
 if __name__ == "__main__":
