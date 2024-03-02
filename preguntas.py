@@ -166,7 +166,7 @@ def pregunta_05():
         (letra, max_valor, min_valor)
         for letra, (max_valor, min_valor) in max_min_por_letra.items()
     ]
-    max_min_lista_ordenada = sorted(max_min_lista.items())
+    max_min_lista_ordenada = sorted(max_min_lista, key=lambda x: x[0])
 
     return max_min_lista
 
