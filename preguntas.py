@@ -12,6 +12,11 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 """
 
+import csv
+from collections import defaultdict
+
+nombre_archivo = "data.csv"
+
 
 def pregunta_01():
     """
@@ -21,7 +26,15 @@ def pregunta_01():
     214
 
     """
-    return
+    suma_segunda_columna = 0
+
+    with open(nombre_archivo, newline="") as archivo_csv:
+        for linea in archivo_csv:
+            partes = linea.strip().split("\t")
+            segundo_elemento = partes[1]
+            suma_segunda_columna += int(segundo_elemento)
+
+    return suma_segunda_columna
 
 
 def pregunta_02():
@@ -39,7 +52,17 @@ def pregunta_02():
     ]
 
     """
-    return
+    registros_por_letra = defaultdict(int)
+    with open(nombre_archivo, newline="") as archivo_csv:
+        lector_csv = csv.reader(archivo_csv, delimiter="\t")
+
+        for fila in lector_csv:
+            primera_letra = fila[0][0].upper()
+            registros_por_letra[primera_letra] += 1
+
+    registros_ordenados = sorted(registros_por_letra.items())
+
+    return registros_ordenados
 
 
 def pregunta_03():
@@ -57,7 +80,20 @@ def pregunta_03():
     ]
 
     """
-    return
+    suma_por_letra = defaultdict(int)
+
+    with open(nombre_archivo, newline="") as archivo_csv:
+        lector_csv = csv.reader(archivo_csv, delimiter="\t")
+
+        for fila in lector_csv:
+            if fila:
+                primera_letra = fila[0][0].upper()
+                valor_segunda_columna = int(fila[1])
+                suma_por_letra[primera_letra] += valor_segunda_columna
+
+    suma_ordenada = sorted(suma_por_letra.items())
+
+    return suma_ordenada
 
 
 def pregunta_04():
@@ -82,7 +118,20 @@ def pregunta_04():
     ]
 
     """
-    return
+    registros_por_mes = defaultdict(int)
+
+    with open(nombre_archivo, newline="") as archivo_csv:
+        lector_csv = csv.reader(archivo_csv, delimiter="\t")
+
+        for fila in lector_csv:
+            if fila:
+                fecha = fila[2]
+                mes = fecha.split("-")[1]
+                registros_por_mes[mes] += 1
+
+    registros_ordenados = sorted(registros_por_mes.items(), key=lambda x: int(x[0]))
+
+    return registros_ordenados
 
 
 def pregunta_05():
@@ -100,7 +149,27 @@ def pregunta_05():
     ]
 
     """
-    return
+    max_min_por_letra = defaultdict(lambda: (float("-inf"), float("inf")))
+
+    with open(nombre_archivo, newline="") as archivo_csv:
+        lector_csv = csv.reader(archivo_csv, delimiter="\t")
+
+        for fila in lector_csv:
+            if fila:
+                letra = fila[0]
+                valor_columna_2 = int(fila[1])
+                max_min_por_letra[letra] = (
+                    max(max_min_por_letra[letra][0], valor_columna_2),
+                    min(max_min_por_letra[letra][1], valor_columna_2),
+                )
+
+    max_min_lista = [
+        (letra, max_valor, min_valor)
+        for letra, (max_valor, min_valor) in max_min_por_letra.items()
+    ]
+    max_min_lista_ordenada = sorted(max_min_lista.items())
+
+    return max_min_lista
 
 
 def pregunta_06():
@@ -125,7 +194,40 @@ def pregunta_06():
     ]
 
     """
-    return
+
+    min_max_por_clave = defaultdict(lambda: (float("inf"), float("-inf")))
+
+    # Abrir el archivo CSV en modo lectura
+    with open(nombre_archivo, newline="") as archivo_csv:
+        # Crear un lector CSV
+        lector_csv = csv.reader(archivo_csv, delimiter="\t")
+
+        # Iterar sobre cada fila del archivo CSV
+        for fila in lector_csv:
+            if fila:
+                # Obtener el diccionario codificado en la columna 5
+                diccionario_codificado = fila[4]
+                # Decodificar el diccionario
+                elementos = diccionario_codificado.split(",")
+                for elemento in elementos:
+                    clave, valor_str = elemento.split(":")
+                    valor = int(valor_str)
+                    # Actualizar el valor más pequeño y el valor más grande para la clave correspondiente
+                    min_max_por_clave[clave] = (
+                        min(min_max_por_clave[clave][0], valor),
+                        max(min_max_por_clave[clave][1], valor),
+                    )
+
+    # Convertir el diccionario a una lista de tuplas
+    min_max_lista = [
+        (clave, min_valor, max_valor)
+        for clave, (min_valor, max_valor) in min_max_por_clave.items()
+    ]
+
+    # Ordenar la lista de tuplas alfabéticamente por clave
+    min_max_lista_ordenada = sorted(min_max_lista)
+
+    return min_max_lista_ordenada
 
 
 def pregunta_07():
@@ -258,3 +360,22 @@ def pregunta_12():
 
     """
     return
+
+
+def main():
+    print(pregunta_01())
+    print(pregunta_02())
+    print(pregunta_03())
+    print(pregunta_04())
+    print(pregunta_05())
+    # print(pregunta_06())
+    # print(pregunta_07())
+    # print(pregunta_08())
+    # print(pregunta_09())
+    # print(pregunta_10())
+    # print(pregunta_11())
+    # print(pregunta_12())
+
+
+if __name__ == "__main__":
+    main()
